@@ -27,7 +27,7 @@ where the changes are on the broker, which is the part worth understanding.
 ## Run it
 
 ```bash
-cp .env.example .env   # set POSTGRES_PASSWORD to something of your own
+cp .env.example .env   # then fill in user, password and database name
 make up                # start postgres, kafka, zookeeper, debezium, kafka-ui
 make register          # register the source connector
 make status            # confirm the connector and its task are RUNNING

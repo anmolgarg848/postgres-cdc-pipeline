@@ -1,0 +1,7 @@
+# https://docs.gitguardian.com/ggshield-docs/reference/config
+version: 2
+
+secret:
+  ignored-paths:
+    # Template only. Every value is empty by design; there is no secret here.
+    - .env.example
