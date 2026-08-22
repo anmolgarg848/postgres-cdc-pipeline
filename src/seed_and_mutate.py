@@ -26,6 +26,22 @@ CHANNELS = ("web", "mobile", "pos", "api")
 STATUSES = ("pending", "settled", "refunded", "failed")
 
 
+def _dsn_from_env() -> str:
+    """Build the DSN from discrete env vars so no credential has a default."""
+    try:
+        user = os.environ["POSTGRES_USER"]
+        password = os.environ["POSTGRES_PASSWORD"]
+    except KeyError as exc:
+        raise SystemExit(
+            f"missing {exc.args[0]} — copy .env.example to .env and set it, "
+            "or export DATABASE_URL"
+        ) from None
+    host = os.getenv("POSTGRES_HOST", "localhost")
+    port = os.getenv("POSTGRES_PORT", "5432")
+    db = os.getenv("POSTGRES_DB", "shop")
+    return f"postgresql://{user}:{password}@{host}:{port}/{db}"
+
+
 @dataclass(frozen=True)
 class Settings:
     dsn: str
@@ -35,9 +51,7 @@ class Settings:
     @classmethod
     def from_env(cls) -> "Settings":
         return cls(
-            dsn=os.getenv(
-                "DATABASE_URL", "postgresql://cdc:cdc@localhost:5432/shop"
-            ),
+            dsn=os.getenv("DATABASE_URL") or _dsn_from_env(),
             customers=int(os.getenv("SEED_CUSTOMERS", "50")),
             interval=float(os.getenv("EVENT_INTERVAL", "1.0")),
         )

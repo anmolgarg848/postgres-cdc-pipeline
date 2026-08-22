@@ -27,10 +27,16 @@ where the changes are on the broker, which is the part worth understanding.
 ## Run it
 
 ```bash
-make up          # start postgres, kafka, zookeeper, debezium, kafka-ui
-make register    # register the source connector
-make status      # confirm the connector and its task are RUNNING
+cp .env.example .env   # set POSTGRES_PASSWORD to something of your own
+make up                # start postgres, kafka, zookeeper, debezium, kafka-ui
+make register          # register the source connector
+make status            # confirm the connector and its task are RUNNING
 ```
+
+Credentials live in `.env`, which is gitignored. The connector config in
+`connectors/postgres-source.json` is a template — `make register` substitutes the
+environment into it before posting to Kafka Connect, so no password is ever
+committed.
 
 Then, in two terminals:
 

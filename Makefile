@@ -9,10 +9,14 @@ down:          ## stop the stack, keep data
 reset:         ## stop and destroy data + replication slot
 	docker compose down -v
 
-register:      ## register the Debezium source connector
-	curl -sS -X PUT http://localhost:8083/connectors/postgres-source/config \
-		-H 'Content-Type: application/json' \
-		-d @<(python3 -c "import json;print(json.dumps(json.load(open('connectors/postgres-source.json'))['config']))") \
+register:      ## register the Debezium source connector (credentials from .env)
+	@test -f .env || (echo "no .env — copy .env.example to .env first" && exit 1)
+	@set -a && . ./.env && set +a && \
+		python3 -c "import json,os,string,sys; \
+cfg=json.load(open('connectors/postgres-source.json'))['config']; \
+print(json.dumps({k: string.Template(v).safe_substitute(os.environ) if isinstance(v,str) else v for k,v in cfg.items()}))" \
+		| curl -sS -X PUT http://localhost:8083/connectors/postgres-source/config \
+			-H 'Content-Type: application/json' -d @- \
 		| python3 -m json.tool
 
 status:        ## connector + task state
