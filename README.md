@@ -8,10 +8,7 @@ that is how the database survives a crash. Change Data Capture is the idea of
 reading that log and publishing it as a stream, so other systems learn about
 changes without polling the database or having the application dual-write.
 
-![CDC architecture: sources into PostgreSQL, Debezium reading the write-ahead log, Kafka as transport with ZooKeeper and a control centre, stream processing options, and BI and search sinks](architecture.png)
-
-<sub>Architecture diagram from
-<a href="https://github.com/airscholar/changecapture-e2e">airscholar/changecapture-e2e</a>.</sub>
+![CDC architecture: applications, PostgreSQL and users as sources; Debezium capturing changes from PostgreSQL; Kafka as the event streaming platform with ZooKeeper and a control centre for monitoring; Spark, Flink, Storm and ksqlDB as stream processing options; Superset, Elasticsearch, Slack and Telegram as destinations](architecture.png)
 
 ## Stack
 
@@ -83,13 +80,6 @@ shows how much WAL each slot is pinning:
 ```
 
 `make reset` tears the volumes down, which is the clean way to drop the slot.
-
-## Credit
-
-The stack and architecture here follow the pattern in
-[airscholar/changecapture-e2e](https://github.com/airscholar/changecapture-e2e),
-which is what got me interested in doing this properly. The code in this repo is
-my own implementation.
 
 ## Licence
 
