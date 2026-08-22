@@ -8,6 +8,11 @@ that is how the database survives a crash. Change Data Capture is the idea of
 reading that log and publishing it as a stream, so other systems learn about
 changes without polling the database or having the application dual-write.
 
+![CDC architecture: sources into PostgreSQL, Debezium reading the write-ahead log, Kafka as transport with ZooKeeper and a control centre, stream processing options, and BI and search sinks](architecture.png)
+
+<sub>Architecture diagram from
+<a href="https://github.com/airscholar/changecapture-e2e">airscholar/changecapture-e2e</a>.</sub>
+
 ## Stack
 
 | Stage | Component |
